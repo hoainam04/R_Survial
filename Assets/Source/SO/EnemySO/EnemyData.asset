@@ -1,0 +1,32 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 523fbdbcfc4c67e4fa1585df8b9ce436, type: 3}
+  m_Name: EnemyData
+  m_EditorClassIdentifier: Assembly-CSharp::PROJ_R.Enemy.Data.EnemyData
+  author: Unknown
+  version: 1.0
+  description: 
+  maxHealth: 10000
+  attackDamage: 10
+  damageType: 0
+  attackCooldown: 1.5
+  moveSpeed: 2.5
+  rotationSpeed: 540
+  detectionRange: 8
+  attackRange: 1.5
+  shootingRange: 12
+  stopDistance: 6
+  bulletSpread: 0.02
+  canUseRangedCombat: 1
+  canUseMeleeFallback: 1
+  equippedWeapon: {fileID: 11400000, guid: 517316013494fc74cb5592c77f028488, type: 2}
+  equippedItems: []

@@ -1,0 +1,56 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6d69cb75754c5d74c914f89c0c4b8dd8, type: 3}
+  m_Name: AR 0
+  m_EditorClassIdentifier: Assembly-CSharp::PROJ.Equipment.WeaponRangedSO
+  itemName: AR_0
+  itemIcon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  description: 
+  maxStackSize: 1
+  sellPrice: 0
+  rarity: 0
+  weight: 0
+  equipmentPrefab: {fileID: 6228741407758303228, guid: 05115b495d750604095834ccbb6476b6, type: 3}
+  bonusDamage: 0
+  bonusDefense: 0
+  bonusMaxHealth: 0
+  bonusMaxStamina: 0
+  bonusCriticalRate: 0
+  bonusCriticalDamage: 0
+  bonusMoveSpeed: 0
+  bonusDashSpeed: 0
+  bonusStaminaRegen: 0
+  bonusHPRegen: 0
+  bonusAttackRange: 0
+  maxDurability: 100
+  damage: 6
+  attackRange: 20
+  moveSpeedModifier: 1
+  bulletType: 0
+  gunType: 1
+  maxAmmo: 30
+  reloadTime: 2
+  fireRate: 0.1
+  pelletCount: 1
+  useAutoShotgunPellets: 1
+  spreadConeAngle: 18
+  minSpread: 0.01
+  maxSpread: 0.35
+  spreadIncreasePerShot: 0.025
+  spreadRecoverySpeed: 0.8
+  recoilForce: 0.05
+  horizontalRecoil: 1
+  verticalRecoil: 0.5
+  bulletSpeed: 40
+  projectilePrefab: {fileID: 0}
+  tracerPrefab: {fileID: 8132833188732207588, guid: f7591859cb608c54c9056946f6416d32, type: 3}
+  tracerDuration: 0.05

@@ -1,0 +1,19 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!221 &22100000
+AnimatorOverrideController:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_Name: kayKitOverride
+  m_Controller: {fileID: 9100000, guid: 552df6b7aab394147a8d5437717fcb35, type: 2}
+  m_Clips:
+  - m_OriginalClip: {fileID: -835893644005555353, guid: 298adad073264fa4b8eaaabbb962b20d, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 5c267e1df8b2d214c9ec7257c74f3f3b, type: 2}
+  - m_OriginalClip: {fileID: -5022345142470895224, guid: 298adad073264fa4b8eaaabbb962b20d, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 1d5dc7cd7c0fb8a46aa8a53c76dbf7b4, type: 2}
+  - m_OriginalClip: {fileID: 9019994078358539022, guid: 298adad073264fa4b8eaaabbb962b20d, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 86e112c8f8ceb1f45a30a2b7b380ccb1, type: 2}
+  - m_OriginalClip: {fileID: 46258634250283767, guid: 298adad073264fa4b8eaaabbb962b20d, type: 3}
+    m_OverrideClip: {fileID: 7400000, guid: 7d3c4c13868626440a76d8392c544f84, type: 2}

@@ -1,0 +1,40 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 49d93656650dd0841b8c3cd437de11ab, type: 3}
+  m_Name: Sword
+  m_EditorClassIdentifier: Assembly-CSharp::PROJ.Equipment.WeaponMeleeSO
+  itemName: Dagger
+  itemIcon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  description: 
+  maxStackSize: 1
+  sellPrice: 0
+  rarity: 0
+  weight: 0
+  equipmentPrefab: {fileID: 2418437592047882745, guid: df17277d0d78dd34e94590af26b57b05, type: 3}
+  bonusDamage: 0
+  bonusDefense: 0
+  bonusMaxHealth: 0
+  bonusMaxStamina: 0
+  bonusCriticalRate: 0
+  bonusCriticalDamage: 0
+  bonusMoveSpeed: 0
+  bonusDashSpeed: 0
+  bonusStaminaRegen: 0
+  bonusHPRegen: 0
+  bonusAttackRange: 0
+  maxDurability: 100
+  damage: 20
+  attackRange: 1
+  moveSpeedModifier: 1
+  meleeType: 0
+  attackCooldown: 0.5
+  hitboxDelay: 0.2

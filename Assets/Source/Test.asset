@@ -1,0 +1,25 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: cc1a96963a0837d4a9d0c8f0aca3620e, type: 3}
+  m_Name: Test
+  m_EditorClassIdentifier: Assembly-CSharp::PROJ_R.Item.Data.ItemData
+  author: Unknown
+  version: 1.0
+  description: 
+  itemId: 23123
+  displayName: CokoWater
+  icon: {fileID: 10913, guid: 0000000000000000f000000000000000, type: 0}
+  pickupPrefab: {fileID: 7256034390407003792, guid: 624b7b02277f4624b9c7e17f58e1b45a, type: 3}
+  stackable: 1
+  maxStack: 10
+  weight: 0.5
+  itemDescription: 
