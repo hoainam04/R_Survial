@@ -15,7 +15,7 @@ public class GunProjectile : WeaponRanged
         if (projectilePrefab == null) return;
 
         int pellets = ResolvePelletCount();
-        float damage = ResolveDamage(15f);
+        float baseDamage = ResolveDamage(15f);
         float finalBulletSpeed = ResolveProjectileSpeed(fallbackBulletSpeed);
         GunType gunType = weaponData != null ? weaponData.gunType : GunType.Pistol;
         int maxAmmo = weaponData != null ? weaponData.maxAmmo : 0;
@@ -23,6 +23,7 @@ public class GunProjectile : WeaponRanged
         for (int i = 0; i < pellets; i++)
         {
             Vector3 finalDirection = GetPelletDirection(flatDirection, i, pellets);
+            float damage = ResolveCriticalDamage(baseDamage, out bool isCritical);
 
             GameObject bulletGo = Instantiate(
                 projectilePrefab,
@@ -39,7 +40,7 @@ public class GunProjectile : WeaponRanged
             ProjectileBullet bulletScript = bulletGo.GetComponent<ProjectileBullet>();
             if (bulletScript != null)
             {
-                bulletScript.Setup(damage, enemyLayers);
+                bulletScript.Setup(damage, enemyLayers, isCritical);
             }
         }
 

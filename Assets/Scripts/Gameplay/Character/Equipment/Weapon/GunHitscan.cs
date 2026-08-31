@@ -16,7 +16,7 @@ public class GunHitscan : WeaponRanged
 
         GunType gunType = weaponData != null ? weaponData.gunType : GunType.Pistol;
         float maxRange = ResolveMaxRange(20f);
-        float damage = ResolveDamage(10f);
+        float baseDamage = ResolveDamage(10f);
         int pellets = ResolvePelletCount();
         
         GameObject tracerObjectPrefab = ResolveTracerObjectPrefab(weaponData != null ? weaponData.tracerPrefab : null);
@@ -29,6 +29,7 @@ public class GunHitscan : WeaponRanged
         {
             Vector3 finalDirection = GetPelletDirection(flatDirection, i, pellets);
             Vector3 targetPosition = muzzlePoint.position + finalDirection * maxRange;
+            float damage = ResolveCriticalDamage(baseDamage, out bool isCritical);
 
             if (Physics.Raycast(muzzlePoint.position, finalDirection, out RaycastHit hitInfo, maxRange, enemyLayers))
             {
@@ -39,8 +40,8 @@ public class GunHitscan : WeaponRanged
 
                 if (attributeManager != null && !attributeManager.IsDead)
                 {
-                    attributeManager.ApplyDamage(damage, false);
-                    Debug.Log($"[{gunType}] Trúng {hitInfo.collider.name} gây {damage} dmg!");
+                    attributeManager.ApplyDamage(damage, isCritical);
+                    Debug.Log($"[{gunType}] Trúng {hitInfo.collider.name} gây {damage} dmg{(isCritical ? " (CHÍ MẠNG!)" : string.Empty)}!");
                 }
             }
 
