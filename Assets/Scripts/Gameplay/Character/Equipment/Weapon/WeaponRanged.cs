@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using PROJ.Attributes;
 using PROJ.Equipment;
 
 public abstract class WeaponRanged : MonoBehaviour
@@ -189,6 +190,30 @@ public abstract class WeaponRanged : MonoBehaviour
     protected float ResolveDamage(float fallback)
     {
         return weaponData != null ? weaponData.damage : fallback;
+    }
+
+    protected float ResolveCriticalDamage(float baseDamage, out bool isCritical)
+    {
+        isCritical = false;
+        float finalDamage = Mathf.Max(1f, baseDamage);
+
+        CharacterControllerBrain attackerBrain = GetComponentInParent<CharacterControllerBrain>();
+        if (attackerBrain == null || attackerBrain.AttributeManager == null)
+        {
+            return finalDamage;
+        }
+
+        var critRateAttr = attackerBrain.AttributeManager.GetAttribute(AttributeType.CriticalRate);
+        if (critRateAttr == null || Random.Range(0f, 100f) > critRateAttr.CurrentValue)
+        {
+            return finalDamage;
+        }
+
+        isCritical = true;
+        var critDamageAttr = attackerBrain.AttributeManager.GetAttribute(AttributeType.CriticalDamage);
+        float critMultiplier = critDamageAttr != null ? (critDamageAttr.CurrentValue / 100f) : 1.5f;
+        finalDamage = baseDamage * Mathf.Max(1f, critMultiplier);
+        return finalDamage;
     }
 
     protected float ResolveMaxRange(float fallback)
