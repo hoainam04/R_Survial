@@ -17,8 +17,6 @@ namespace PROJ.UI
         [SerializeField] private GameObject damagePopupPrefab; // Prefab chứa component DamagePopup
         [SerializeField] private Transform damagePopupSpawnParent; // Vị trí cha để spawn popup (nếu trống sẽ dùng transform của PlayerStatusUI)
 
-        private float lastHealth;
-
         [Header("UI References - Stamina")]
         [SerializeField] private Slider staminaSlider;
         [SerializeField] private TextMeshProUGUI staminaText;
@@ -32,11 +30,6 @@ namespace PROJ.UI
 
             if (attributeManager != null)
             {
-                var healthAttr = attributeManager.GetAttribute(AttributeType.Health);
-                if (healthAttr != null)
-                {
-                    lastHealth = healthAttr.CurrentValue;
-                }
                 SubscribeEvents();
             }
             else
@@ -70,6 +63,8 @@ namespace PROJ.UI
                 staminaAttr.OnValueChanged += UpdateStaminaUI;
                 UpdateStaminaUI(staminaAttr.CurrentValue, staminaAttr.MaxValue);
             }
+
+            attributeManager.OnDamageTaken += HandleDamageTaken;
         }
 
         private void UnsubscribeEvents()
@@ -87,6 +82,8 @@ namespace PROJ.UI
             {
                 staminaAttr.OnValueChanged -= UpdateStaminaUI;
             }
+
+            attributeManager.OnDamageTaken -= HandleDamageTaken;
         }
 
         private void UpdateHealthUI(float current, float max)
@@ -100,18 +97,11 @@ namespace PROJ.UI
             {
                 healthText.text = $"{Mathf.Ceil(current)} / {Mathf.Ceil(max)}";
             }
+        }
 
-            // Kiểm tra nếu máu giảm thì sinh ra damage popup riêng biệt không bị chồng lên nhau
-            if (current < lastHealth)
-            {
-                float damageTaken = lastHealth - current;
-                // Kiểm tra xem sát thương có phải là chí mạng không (ước lượng dựa vào thông tin nhận được hoặc thông qua event mở rộng)
-                // Hiện tại nếu máu giảm đột ngột lớn hơn một ngưỡng hoặc có thể trigger từ nguồn ngoài, tạm thời check ngẫu nhiên hoặc mặc định false.
-                bool isCrit = false; 
-                SpawnDamagePopup(damageTaken, isCrit);
-            }
-
-            lastHealth = current;
+        private void HandleDamageTaken(float damageTaken, bool isCritical)
+        {
+            SpawnDamagePopup(damageTaken, isCritical);
         }
 
         public void TriggerCustomDamagePopup(float damage, bool isCritical)

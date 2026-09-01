@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -14,6 +15,13 @@ namespace PROJ.Attributes
         private Dictionary<AttributeType, CharacterAttribute> attributeDict;
 
         public bool IsDead => GetAttribute(AttributeType.Health)?.CurrentValue <= 0f;
+
+        /// <summary>
+        /// Phát sinh mỗi khi nhân vật nhận sát thương, kèm thông tin sát thương thực tế và có phải chí mạng hay không.
+        /// UI (ví dụ damage popup) nên lắng nghe sự kiện này thay vì suy đoán từ chênh lệch máu.
+        /// </summary>
+        public event Action<float, bool> OnDamageTaken;
+
 
         private void Awake()
         {
@@ -81,6 +89,7 @@ namespace PROJ.Attributes
             var defense = GetAttribute(AttributeType.Defense)?.CurrentValue ?? 0f;
             float finalDamage = Mathf.Max(1f, amount - defense);
             health.Modify(-finalDamage);
+            OnDamageTaken?.Invoke(finalDamage, isCritical);
             // Debug.Log($"[{gameObject.name} Take Damage ]-{finalDamage} HP {health.CurrentValue}/ {health.MaxValue} HP{(isCritical ? " (CRIT)" : "")}");
 
             if (health.CurrentValue <= 0)
