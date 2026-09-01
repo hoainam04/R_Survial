@@ -81,7 +81,7 @@ namespace PROJ.Attributes
             var defense = GetAttribute(AttributeType.Defense)?.CurrentValue ?? 0f;
             float finalDamage = Mathf.Max(1f, amount - defense);
             health.Modify(-finalDamage);
-            Debug.Log($"[{gameObject.name} Take Damage ]-{finalDamage} HP {health.CurrentValue}/ {health.MaxValue} HP{(isCritical ? " (CRIT)" : "")}");
+            // Debug.Log($"[{gameObject.name} Take Damage ]-{finalDamage} HP {health.CurrentValue}/ {health.MaxValue} HP{(isCritical ? " (CRIT)" : "")}");
 
             if (health.CurrentValue <= 0)
             {

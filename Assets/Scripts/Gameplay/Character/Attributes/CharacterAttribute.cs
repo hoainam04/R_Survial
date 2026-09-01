@@ -78,5 +78,10 @@ namespace PROJ.Attributes
             currentValue = Mathf.Clamp(currentValue, 0f, maxValue);
             OnValueChanged?.Invoke(currentValue, maxValue);
         }
+
+        public void DebugAttribute()
+        {
+            Debug.Log($"Attribute Type: {type}, Current Value: {currentValue}, Max Value: {maxValue}");
+        }
     }
 }

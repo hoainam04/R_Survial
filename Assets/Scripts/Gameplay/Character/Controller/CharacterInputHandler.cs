@@ -4,6 +4,16 @@ using PROJ.Equipment;
 
 public class CharacterInputHandler : MonoBehaviour
 {
+    [Header("Cấu Hình Tự Động Tấn Công (Auto Attack)")]
+    [SerializeField] private bool enableAutoAttack = true;
+
+    private CharacterControllerBrain brain;
+
+    private void Awake()
+    {
+        brain = GetComponent<CharacterControllerBrain>();
+    }
+
     public bool GetDashInput()
     {
         if (GameSettingsManager.Instance != null)
@@ -20,9 +30,23 @@ public class CharacterInputHandler : MonoBehaviour
 
     public bool GetAttackInput()
     {
-        if (GameSettingsManager.Instance != null)
-            return GameSettingsManager.Instance.GetKey("Attack");
-        return Input.GetMouseButton(0);
+        if (GameSettingsManager.Instance != null && GameSettingsManager.Instance.GetKey("Attack"))
+            return true;
+
+        if (Input.GetMouseButton(0))
+            return true;
+
+        if (enableAutoAttack && brain != null && brain.AimingHandler != null)
+        {
+            // Tận dụng CharacterAimingHandler để kiểm tra xem có target nào nằm trong tầm bắn không
+            Transform target = brain.AimingHandler.GetCurrentTargetEnemy(transform);
+            if (target != null)
+            {
+                return true; // Tự động bóp cò / tấn công khi có địch trong tầm nhắm
+            }
+        }
+
+        return false;
     }
 
     public bool GetReloadInput()

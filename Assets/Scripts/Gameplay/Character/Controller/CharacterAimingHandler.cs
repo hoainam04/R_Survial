@@ -4,15 +4,43 @@ using PROJ.Attributes;
 public class CharacterAimingHandler : MonoBehaviour
 {
     [Header("Cấu Hình Nhắm Bắn (Aim Settings)")]
-    [SerializeField] private bool useAutoAim = false;
-    [SerializeField] private float autoAimRadius = 5f;
+    [SerializeField] private bool useAutoAim = true;
+    [SerializeField] private float autoAimRadius = 7f;
     [SerializeField] private LayerMask enemyLayer;
 
     private CharacterAttributeManager attributeManager;
+    private Transform currentTargetEnemy;
 
     private void Awake()
     {
         attributeManager = GetComponent<CharacterAttributeManager>();
+    }
+
+    public Transform GetCurrentTargetEnemy(Transform characterTransform)
+    {
+        if (attributeManager != null && attributeManager.GetAttribute(AttributeType.AttackRange) != null)
+        {
+            autoAimRadius = attributeManager.GetAttribute(AttributeType.AttackRange).CurrentValue;
+        }
+
+        Collider[] closeEnemies = Physics.OverlapSphere(characterTransform.position, autoAimRadius, enemyLayer);
+        if (closeEnemies.Length == 0) return null;
+
+        Transform nearestEnemy = null;
+        float minDistance = Mathf.Infinity;
+
+        foreach (var enemy in closeEnemies)
+        {
+            float dist = Vector3.Distance(characterTransform.position, enemy.transform.position);
+            if (dist < minDistance)
+            {
+                minDistance = dist;
+                nearestEnemy = enemy.transform;
+            }
+        }
+
+        currentTargetEnemy = nearestEnemy;
+        return currentTargetEnemy;
     }
 
     public Vector3 CalculateAimDirection(Transform characterTransform)
@@ -34,35 +62,12 @@ public class CharacterAimingHandler : MonoBehaviour
         }
         else
         {
-            if (attributeManager != null && attributeManager.GetAttribute(AttributeType.AttackRange) != null)
+            Transform target = GetCurrentTargetEnemy(characterTransform);
+            if (target != null)
             {
-                autoAimRadius = attributeManager.GetAttribute(AttributeType.AttackRange).CurrentValue;
-            }
-
-            // --- CHẾ ĐỘ MOBILE/AUTO-AIM: Tự khóa mục tiêu gần nhất ---
-            Collider[] closeEnemies = Physics.OverlapSphere(characterTransform.position, autoAimRadius, enemyLayer);
-            
-            if (closeEnemies.Length > 0)
-            {
-                Transform nearestEnemy = null;
-                float minDistance = Mathf.Infinity;
-
-                foreach (var enemy in closeEnemies)
-                {
-                    float dist = Vector3.Distance(characterTransform.position, enemy.transform.position);
-                    if (dist < minDistance)
-                    {
-                        minDistance = dist;
-                        nearestEnemy = enemy.transform;
-                    }
-                }
-
-                if (nearestEnemy != null)
-                {
-                    Vector3 enemyPos = nearestEnemy.position;
-                    enemyPos.y = characterTransform.position.y; // Triệt tiêu trục Y
-                    return (enemyPos - characterTransform.position).normalized;
-                }
+                Vector3 enemyPos = target.position;
+                enemyPos.y = characterTransform.position.y; // Triệt tiêu trục Y
+                return (enemyPos - characterTransform.position).normalized;
             }
         }
 

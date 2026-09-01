@@ -134,6 +134,17 @@ namespace PROJ.Equipment
                 var moveSpeedAttr = attributeManager.GetAttribute(AttributeType.MoveSpeed);
                 moveSpeedAttr?.ModifyMaxValueByAmount(weaponItem.moveSpeedModifier * modifierMultiplier);
             }
+            if (weaponItem.critChance != 0)
+            {
+                var critChanceAttr = attributeManager.GetAttribute(AttributeType.CriticalRate);
+                critChanceAttr?.ModifyMaxValueByAmount(weaponItem.critChance * modifierMultiplier);
+            }
+
+            if (weaponItem.critDamageMultiplier != 0)
+            {
+                var critDamageAttr = attributeManager.GetAttribute(AttributeType.CriticalDamage);
+                critDamageAttr?.ModifyMaxValueByAmount(weaponItem.critDamageMultiplier * modifierMultiplier);
+            }
         }
 
         private void ApplyNonWeaponStats(EquipmentItemSO item, float modifierMultiplier)

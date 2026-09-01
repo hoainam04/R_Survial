@@ -40,9 +40,9 @@ MonoBehaviour:
   maxAmmo: 5
   reloadTime: 5
   fireRate: 0.85
-  pelletCount: 10
+  pelletCount: 30
   useAutoShotgunPellets: 1
-  spreadConeAngle: 18
+  spreadConeAngle: 5
   minSpread: 0.01
   maxSpread: 0.35
   spreadIncreasePerShot: 0.04
@@ -50,7 +50,7 @@ MonoBehaviour:
   recoilForce: 0.15
   horizontalRecoil: 1
   verticalRecoil: 0.6
-  bulletSpeed: 30
+  bulletSpeed: 40
   projectilePrefab: {fileID: 0}
   tracerPrefab: {fileID: 8132833188732207588, guid: f7591859cb608c54c9056946f6416d32, type: 3}
   tracerDuration: 0.05

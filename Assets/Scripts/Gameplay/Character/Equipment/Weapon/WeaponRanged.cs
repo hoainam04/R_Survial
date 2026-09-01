@@ -289,9 +289,9 @@ public abstract class WeaponRanged : MonoBehaviour
     {
         if (gunModel == null) return;
 
-        // Không ghi đè rotation gốc bằng state hiện tại của model.
-        // originalLocalRotation phải giữ giá trị mặc định ban đầu của gunModel
-        // để recoil luôn reset về đúng pose chuẩn, không cộng dồn qua từng shot.
+        // Giữ gunModel quay theo thân hoặc chỉ định hướng nhẹ nhàng, 
+        // nhưng để đạn bay thẳng vào đúng tâm/hướng ngắm (direction từ CharacterAimingHandler), 
+        // ta không ép cứng rotation của gunModel lệch khỏi transform cha quá nhiều nếu muzzlePoint đã chuẩn.
     }
 
     #endregion

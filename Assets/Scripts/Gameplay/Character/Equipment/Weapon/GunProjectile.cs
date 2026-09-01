@@ -17,22 +17,39 @@ public class GunProjectile : WeaponRanged
         int pellets = ResolvePelletCount();
         float damage = ResolveDamage(15f);
         float finalBulletSpeed = ResolveProjectileSpeed(fallbackBulletSpeed);
+        float maxRange = ResolveMaxRange(30f);
         GunType gunType = weaponData != null ? weaponData.gunType : GunType.Pistol;
         int maxAmmo = weaponData != null ? weaponData.maxAmmo : 0;
 
+        // Lấy tâm nhân vật đưa về cùng cao độ với muzzlePoint
+        Vector3 characterCenter = transform.root.position;
+        if (muzzlePoint != null)
+        {
+            characterCenter.y = muzzlePoint.position.y;
+        }
+
+        Vector3 spawnOrigin = muzzlePoint != null ? muzzlePoint.position : transform.position;
+
         for (int i = 0; i < pellets; i++)
         {
-            Vector3 finalDirection = GetPelletDirection(flatDirection, i, pellets);
+            Vector3 rawPelletDir = GetPelletDirection(flatDirection, i, pellets);
+
+            // 1. Điểm ngắm mục tiêu tính từ tâm nhân vật phóng ra xa
+            Vector3 aimPoint = characterCenter + rawPelletDir * maxRange;
+
+            // 2. Hướng bay thực tế: từ nòng súng hội tụ chéo vào điểm aimPoint
+            Vector3 finalDirection = (aimPoint - spawnOrigin).normalized;
 
             GameObject bulletGo = Instantiate(
                 projectilePrefab,
-                muzzlePoint.position,
+                spawnOrigin,
                 Quaternion.LookRotation(finalDirection, Vector3.up)
             );
 
             Rigidbody rb = bulletGo.GetComponent<Rigidbody>();
             if (rb != null)
             {
+                // Unity 6 dùng linearVelocity, các bản cũ dùng velocity
                 rb.linearVelocity = finalDirection * finalBulletSpeed;
             }
 
