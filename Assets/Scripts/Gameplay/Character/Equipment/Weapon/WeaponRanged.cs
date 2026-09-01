@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections;
+using PROJ.Attributes;
 using PROJ.Equipment;
 
 public abstract class WeaponRanged : MonoBehaviour
@@ -191,6 +192,30 @@ public abstract class WeaponRanged : MonoBehaviour
         return weaponData != null ? weaponData.damage : fallback;
     }
 
+    protected float ResolveCriticalDamage(float baseDamage, out bool isCritical)
+    {
+        isCritical = false;
+        float finalDamage = Mathf.Max(1f, baseDamage);
+
+        CharacterControllerBrain attackerBrain = GetComponentInParent<CharacterControllerBrain>();
+        if (attackerBrain == null || attackerBrain.AttributeManager == null)
+        {
+            return finalDamage;
+        }
+
+        var critRateAttr = attackerBrain.AttributeManager.GetAttribute(AttributeType.CriticalRate);
+        if (critRateAttr == null || Random.Range(0f, 100f) > critRateAttr.CurrentValue)
+        {
+            return finalDamage;
+        }
+
+        isCritical = true;
+        var critDamageAttr = attackerBrain.AttributeManager.GetAttribute(AttributeType.CriticalDamage);
+        float critMultiplier = critDamageAttr != null ? (critDamageAttr.CurrentValue / 100f) : 1.5f;
+        finalDamage = baseDamage * Mathf.Max(1f, critMultiplier);
+        return finalDamage;
+    }
+
     protected float ResolveMaxRange(float fallback)
     {
         return weaponData != null ? weaponData.attackRange : fallback;
@@ -289,9 +314,9 @@ public abstract class WeaponRanged : MonoBehaviour
     {
         if (gunModel == null) return;
 
-        // Giữ gunModel quay theo thân hoặc chỉ định hướng nhẹ nhàng, 
-        // nhưng để đạn bay thẳng vào đúng tâm/hướng ngắm (direction từ CharacterAimingHandler), 
-        // ta không ép cứng rotation của gunModel lệch khỏi transform cha quá nhiều nếu muzzlePoint đã chuẩn.
+        // Không ghi đè rotation gốc bằng state hiện tại của model.
+        // originalLocalRotation phải giữ giá trị mặc định ban đầu của gunModel
+        // để recoil luôn reset về đúng pose chuẩn, không cộng dồn qua từng shot.
     }
 
     #endregion

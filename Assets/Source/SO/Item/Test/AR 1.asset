@@ -33,7 +33,9 @@ MonoBehaviour:
   bonusAttackRange: 0
   maxDurability: 100
   damage: 10
-  attackRange: 30
+  attackRange: 10
+  critChance: 0
+  critDamageMultiplier: 1.5
   moveSpeedModifier: 1
   bulletType: 0
   gunType: 2
@@ -50,7 +52,7 @@ MonoBehaviour:
   recoilForce: 0.085
   horizontalRecoil: 0.5
   verticalRecoil: 1
-  bulletSpeed: 30
+  bulletSpeed: 100
   projectilePrefab: {fileID: 0}
   tracerPrefab: {fileID: 8132833188732207588, guid: f7591859cb608c54c9056946f6416d32, type: 3}
   tracerDuration: 0.05

@@ -11,12 +11,14 @@ public class ProjectileBullet : MonoBehaviour
 
     private float damage;
     private LayerMask targetLayers;
+    private bool isCritical;
     private bool hasHit; // Chặn trường hợp 1 viên đạn nổ sát thương 2 lần trong cùng 1 frame
 
-    public void Setup(float damageAmt, LayerMask enemyLayers)
+    public void Setup(float damageAmt, LayerMask enemyLayers, bool crit = false)
     {
         this.damage = damageAmt;
         this.targetLayers = enemyLayers;
+        this.isCritical = crit;
         this.hasHit = false;
 
         // Bắt đầu đếm ngược tự hủy
@@ -37,8 +39,8 @@ public class ProjectileBullet : MonoBehaviour
             var attributeManager = other.GetComponent<CharacterAttributeManager>();
             if (attributeManager != null && !attributeManager.IsDead)
             {
-                attributeManager.ApplyDamage(damage, false);
-                Debug.Log($"[Projectile] Viên đạn găm vào {other.name} gây {damage} dmg!");
+                attributeManager.ApplyDamage(damage, isCritical);
+                Debug.Log($"[Projectile] Viên đạn găm vào {other.name} gây {damage} dmg{(isCritical ? " (CHÍ MẠNG!)" : string.Empty)}!");
             }
 
             // 3. Xử lý hiệu ứng hình ảnh (Nếu có)

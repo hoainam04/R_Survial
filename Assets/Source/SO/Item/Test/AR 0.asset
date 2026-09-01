@@ -33,7 +33,9 @@ MonoBehaviour:
   bonusAttackRange: 0
   maxDurability: 100
   damage: 6
-  attackRange: 10
+  attackRange: 8
+  critChance: 100
+  critDamageMultiplier: 150
   moveSpeedModifier: 1
   bulletType: 0
   gunType: 1

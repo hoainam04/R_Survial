@@ -20,7 +20,7 @@ MonoBehaviour:
   - type: 2
     maxValue: 100
   - type: 3
-    maxValue: 1e+27
+    maxValue: 500
   - type: 4
     maxValue: 0
   - type: 5
