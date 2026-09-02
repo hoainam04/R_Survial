@@ -4,6 +4,17 @@ Tài liệu này ghi nhận các điểm cần lưu ý và kế hoạch refactor
 
 ---
 
+## ✅ Đã Hoàn Thành (Cập nhật lại theo code hiện tại)
+- **`StorageBox` (Kho căn cứ)**: Đã code xong (`Gameplay/Character/Inventory/StorageBox.cs`), logic thêm/xóa/swap item giống `Inventory`, phát `OnStorageChanged` — không gọi UI trực tiếp.
+- **Event Channel Pattern**: Đã có `Core/Patterns/GameEventChannel.cs` (ScriptableObject-based) dùng cho giao tiếp toàn cục. Các hệ thống gameplay (`CharacterAttributeManager`, `Inventory`, `StorageBox`) đang dùng C# event trực tiếp (`OnValueChanged`, `OnInventoryChanged`, `OnStorageChanged`) — `PlayerStatusUI.cs` đã subscribe/unsubscribe đúng chuẩn (`OnDestroy`).
+- **Equipment System**: `CharacterEquipmentManager` đã xử lý equip/unequip, cộng trừ attribute, cộng slot kho đồ khi mặc balo, spawn/destroy model 3D.
+- **UI Kho Đồ & Hotbar**: Đã code xong phần data/UI script:
+  - `ConsumableSO.UseConsumable(CharacterAttributeManager)` áp dụng hồi Máu/Thể lực/Đói/Khát thật qua `CharacterAttribute.Modify`.
+  - `Hotbar.cs` (5 ô gán riêng theo `ItemSO`, đọc phím `slot1`-`slot5` qua `GameSettingsManager`, phát `OnHotbarChanged`).
+  - `InventorySlotUI.cs`/`InventoryPanelUI.cs` (lưới slot động theo `Inventory.TotalSlotCount`, hỗ trợ kéo item, bật/tắt bằng phím `I`).
+  - `HotbarSlotUI.cs`/`HotbarUI.cs` (5 ô cố định, nhận thả kéo để gán, hiển thị số lượng thật từ `Inventory.GetItemCount`).
+  - Xem hướng dẫn dựng Canvas/Prefab thủ công trong Unity Editor tại [`Docs/InventoryHotbarUIGuide.md`](InventoryHotbarUIGuide.md).
+
 ## 🔍 Ghi Chú Rà Soát Scripts Dựa Trên Rules Mới
 
 ### 1. Phân Tách Runtime State khỏi ScriptableObject (`SO`)
@@ -12,18 +23,16 @@ Tài liệu này ghi nhận các điểm cần lưu ý và kế hoạch refactor
 
 ### 2. Quy Định Giao Tiếp Giữa Gameplay và UI
 - **Tình trạng cần lưu ý**: Theo rule mới, tầng Gameplay không được gọi trực tiếp UI để cập nhật (`_hpBar.SetValue(...)`).
-- **Giải pháp refactor sắp tới**: 
-  - Các class quản lý gameplay (như `PlayerHealth`, `CharacterStatusController`, `Inventory`) phải phát ra các C# Event (Ví dụ: `OnHealthChanged`, `OnInventoryChanged`).
-  - Tầng UI Presentation sẽ chủ động đăng ký lắng nghe (`subscribe`) các event này để tự cập nhật hiển thị, đồng thời phải `unsubscribe` trong `OnDisable` / `OnDestroy` để tránh memory leak trên mobile.
+- **Đã áp dụng đúng**: `PlayerStatusUI.cs` subscribe vào `OnValueChanged`/`OnDamageTaken` của `CharacterAttributeManager`, unsubscribe trong `OnDestroy`. Cần giữ đúng pattern này khi làm UI Inventory/Hotbar sắp tới — lắng nghe `Inventory.OnInventoryChanged` / `StorageBox.OnStorageChanged`, không để `Inventory`/`StorageBox` biết đến UI.
 
 ### 3. Nguyên Lý "No Over-engineering" Khi Làm Tính Năng Tiếp Theo
-- **Tình trạng cần lưu ý**: Khi bắt đầu xây dựng hệ thống kho chứa căn cứ (`StorageBox`) hay điểm rút lui (`ExtractionZone`) tiếp theo:
+- **Tình trạng cần lưu ý**: Khi bắt đầu xây dựng UI Kho đồ, Hotbar hay Extraction Zone tiếp theo:
   - **Không** tự động áp dụng hàng loạt Factory, Strategy hay Event Channel nếu logic xử lý chỉ đơn giản là thêm/bớt item hoặc trigger va chạm.
   - Ưu tiên viết code ngắn gọn, rõ ràng, đúng chuẩn SRP và giới hạn dưới 200 dòng.
 
 ---
 
-## ⚡ Các Bước Chuẩn Bị Tiếp Theo (Chưa Code)
-1. Kiểm tra các script quản lý dữ liệu hiện tại để đảm bảo không vi phạm `ScriptableObject Runtime Safety`.
-2. Lên thiết kế chuẩn cho Event Channel / C# Event giữa Gameplay và UI trước khi dựng giao diện.
-3. Tiến hành xây dựng logic `StorageBox` (Kho căn cứ) tuân thủ tuyệt đối các rules mới này.
+## ⚡ Các Bước Tiếp Theo (Đang Làm)
+1. **Wiring thủ công trong Unity Editor**: Code UI Kho Đồ & Hotbar đã xong, nhưng Canvas/Prefab/tham chiếu Inspector cần được dựng thủ công theo [`Docs/InventoryHotbarUIGuide.md`](InventoryHotbarUIGuide.md) (môi trường code hiện tại không có công cụ điều khiển Unity Editor).
+2. **UI cho `StorageBox`**: Chưa làm (để dành cho Phase 3 khi dựng Safehouse) — hiện chỉ có UI cho `Inventory` của Player.
+3. Sau khi wiring & test UI Inventory/Hotbar trong Editor xong, tiếp tục theo `ProjectRoadmap.md` Phase 3 (Safehouse, Raid Deployment, Extraction Point).
