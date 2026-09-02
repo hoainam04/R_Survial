@@ -32,7 +32,7 @@ namespace PROJ.UI
         {
             if (popupText != null)
             {
-                popupText.text = isCritical ? $"-{Mathf.Ceil(damage)} (CRIT!)" : $"-{Mathf.Ceil(damage)}";
+                popupText.text = isCritical ? $"-{Mathf.Ceil(damage)}" : $"-{Mathf.Ceil(damage)}";
                 popupText.color = isCritical ? critColor : normalColor;
             }
 
