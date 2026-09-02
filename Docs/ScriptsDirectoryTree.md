@@ -12,8 +12,27 @@ Assets/Scripts/
 │   │   └── AnimationDataSO.cs          # ScriptableObject lưu thông số Animator Hash
 │   ├── Lifecycle/
 │   │   └── DestroyTimer.cs             # Tự động hủy GameObject sau thời gian định mức
+│   ├── Patterns/                       # Các pattern dùng chung toàn dự án
+│   │   ├── GameEventChannel.cs         # Event Channel Pattern (SO) cho giao tiếp Gameplay <-> UI
+│   │   ├── GenericObjectPool.cs        # Object Pool tổng quát cho đạn, hiệu ứng, kẻ địch
+│   │   └── IDamageCalculationStrategy.cs # Strategy Pattern tính toán sát thương (thường/chí mạng)
+│   ├── Settings/
+│   │   ├── GameSettingsData.cs         # Dữ liệu Keybind/Audio/Graphics (Serializable)
+│   │   └── GameSettingsManager.cs      # Singleton quản lý & lưu/tải settings qua JSON
 │   └── Storage/
 │       └── JsonStorage.cs              # Hỗ trợ lưu trữ dữ liệu định dạng JSON
+│
+├── UI/                                  # Presentation layer, lắng nghe Event từ Gameplay
+│   ├── PlayerStatusUI.cs               # Hiển thị HP/Stamina, spawn Damage Popup
+│   ├── DamagePopup.cs                  # Số damage nổi lên và mờ dần
+│   ├── WorldSpaceUIBillboard.cs        # Xoay Canvas World Space luôn hướng về Camera
+│   ├── Common/
+│   │   └── SafeArea.cs                 # Co giãn UI theo vùng an toàn (notch) màn hình mobile
+│   └── Inventory/
+│       ├── InventorySlotUI.cs          # Widget 1 ô Inventory, hỗ trợ kéo (drag) sang Hotbar
+│       ├── InventoryPanelUI.cs         # Lưới slot động theo Inventory.TotalSlotCount, bật/tắt bằng phím I
+│       ├── HotbarSlotUI.cs             # Widget 1 ô Hotbar, nhận thả (drop) để gán item
+│       └── HotbarUI.cs                 # 5 ô Hotbar cố định, hiển thị icon/số lượng thật từ Inventory
 │
 └── Gameplay/                           # Logic gameplay và hệ thống nhân vật
     ├── Character/
@@ -29,6 +48,8 @@ Assets/Scripts/
     │   │
     │   ├── Controller/                 # Điều khiển nhân vật & Finite State Machine
     │   │   ├── CharacterControllerBrain.cs # Bộ não điều khiển state machine chính
+    │   │   ├── CharacterInputHandler.cs # Đọc input người chơi (PC/Mobile), hỗ trợ auto-attack
+    │   │   ├── CharacterAimingHandler.cs # Xử lý hướng nhắm (chuột PC / auto-aim mobile)
     │   │   ├── Common/
     │   │   │   └── CharacterStaminaRegen.cs # Hồi phục thể lực thông thường
     │   │   ├── Gravity/
@@ -58,6 +79,7 @@ Assets/Scripts/
     │   │   ├── CraftingMaterial.cs     # Định nghĩa nguyên liệu chế tạo
     │   │   ├── EquipmentHolder.cs      # Gắn mô hình 3D vũ khí/trang bị lên nhân vật
     │   │   ├── EquipmentItemSO.cs      # Lớp cơ sở cho vật phẩm có thể trang bị
+    │   │   ├── WeaponEquipmentSO.cs    # Lớp cơ sở chung cho vũ khí (kế thừa EquipmentItemSO)
     │   │   ├── ItemSO.cs               # Lớp cơ sở gốc cho mọi vật phẩm trong game
     │   │   ├── QuestItemSO.cs          # Định nghĩa vật phẩm nhiệm vụ
     │   │   ├── ThrowableSO.cs          # Định nghĩa vật phẩm ném (lựu đạn, bom khói)
@@ -83,6 +105,8 @@ Assets/Scripts/
     │   │   ├── Inventory.cs            # Quản lý danh sách ô chứa, thêm/xóa item
     │   │   ├── InventorySlot.cs        # Cấu trúc dữ liệu của một ô chứa
     │   │   ├── ItemStack.cs            # Cấu trúc lưu trữ Item kèm số lượng
+    │   │   ├── StorageBox.cs           # Kho chứa đồ tại căn cứ (Safehouse Stash)
+    │   │   ├── Hotbar.cs               # 5 ô gán riêng (ItemSO), đọc phím slot1-5, dùng Consumable
     │   │   ├── PlayerItemPicker.cs     # Tương tác nhặt item dưới đất
     │   │   └── WorldItem.cs            # Đại diện item nằm trong thế giới 3D
     │   │

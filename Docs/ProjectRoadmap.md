@@ -17,10 +17,10 @@ Lộ trình chi tiết theo từng giai đoạn (Phase) từ khởi đầu đế
 ## 📌 Phase 2: Hệ Thống Kho Đồ & Trang Bị (Inventory & Equipment Loop)
 *Mục tiêu: Hoàn thiện vòng lặp nhặt đồ, quản lý tài nguyên và trang bị nhân vật.*
 
-- [ ] **Inventory System**: Xây dựng kho đồ dạng lưới/slot (`Inventory`, `InventorySlot`, `ItemStack`), hỗ trợ cộng dồn và quản lý item.
-- [ ] **Equipment System**: Hoàn thiện các slot trang bị (Vũ khí cận chiến/súng, giáp thân, mũ, giày, ba lô, item tiêu hao).
-- [ ] **World Loot & Interaction**: Hệ thống vật phẩm rơi trong thế giới 3D (`WorldItem`, `PlayerItemPicker`) và nhặt đồ vào kho.
-- [ ] **UI Kho Đồ & Hotbar**: Giao diện trực quan hiển thị túi đồ và thanh phím tắt 1-5.
+- [x] **Inventory System**: Xây dựng kho đồ dạng lưới/slot (`Inventory`, `InventorySlot`, `ItemStack`), hỗ trợ cộng dồn và quản lý item.
+- [x] **Equipment System**: Hoàn thiện các slot trang bị (Vũ khí cận chiến/súng, giáp thân, mũ, giày, ba lô, item tiêu hao) qua `CharacterEquipmentManager`.
+- [x] **World Loot & Interaction**: Hệ thống vật phẩm rơi trong thế giới 3D (`WorldItem`, `PlayerItemPicker`) và nhặt đồ vào kho.
+- [x] **UI Kho Đồ & Hotbar**: Giao diện trực quan hiển thị túi đồ (`InventoryPanelUI`, `InventorySlotUI` — kéo/thả) và thanh phím tắt 1-5 (`Hotbar`, `HotbarUI`, `HotbarSlotUI`) áp dụng hiệu ứng thật qua `ConsumableSO.UseConsumable`.
 
 ---
 
