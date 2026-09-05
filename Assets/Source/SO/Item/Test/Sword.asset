@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: Sword
   m_EditorClassIdentifier: Assembly-CSharp::PROJ.Equipment.WeaponMeleeSO
   itemName: Dagger
-  itemIcon: {fileID: 10911, guid: 0000000000000000f000000000000000, type: 0}
+  itemIcon: {fileID: 21300000, guid: b47645fc4456fb945aa80191997a0df8, type: 3}
   description: 
   maxStackSize: 1
   sellPrice: 0
@@ -34,6 +34,8 @@ MonoBehaviour:
   maxDurability: 100
   damage: 20
   attackRange: 1
+  critChance: 0
+  critDamageMultiplier: 1.5
   moveSpeedModifier: 1
   meleeType: 0
   attackCooldown: 0.5

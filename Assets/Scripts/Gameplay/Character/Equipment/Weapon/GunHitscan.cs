@@ -6,6 +6,8 @@ using PROJ.Equipment;
 
 public class GunHitscan : WeaponRanged
 {
+    private const float VisualTracerDistance = 1000f;
+
     [Header("Hiệu Ứng Tia Đạn (Object / Prefab)")]
     [SerializeField] private GameObject fallbackTracerObjectPrefab;
     [SerializeField] private float fallbackTracerDuration = 0.05f;
@@ -15,7 +17,6 @@ public class GunHitscan : WeaponRanged
         if (!PrepareShot(direction, out Vector3 flatDirection)) return;
 
         GunType gunType = weaponData != null ? weaponData.gunType : GunType.Pistol;
-        float maxRange = ResolveMaxRange(20f);
         float baseDamage = ResolveDamage(10f);
         int pellets = ResolvePelletCount();
         
@@ -28,10 +29,10 @@ public class GunHitscan : WeaponRanged
         for (int i = 0; i < pellets; i++)
         {
             Vector3 finalDirection = GetPelletDirection(flatDirection, i, pellets);
-            Vector3 targetPosition = muzzlePoint.position + finalDirection * maxRange;
+            Vector3 targetPosition = muzzlePoint.position + finalDirection * VisualTracerDistance;
             float damage = ResolveCriticalDamage(baseDamage, out bool isCritical);
 
-            if (Physics.Raycast(muzzlePoint.position, finalDirection, out RaycastHit hitInfo, maxRange, enemyLayers))
+            if (Physics.Raycast(muzzlePoint.position, finalDirection, out RaycastHit hitInfo, Mathf.Infinity, enemyLayers))
             {
                 targetPosition = hitInfo.point;
 

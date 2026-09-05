@@ -6,10 +6,14 @@ using PROJ.Item;
 
 namespace PROJ.UI
 {
-    public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler
+    public class InventorySlotUI : MonoBehaviour, IBeginDragHandler, IDragHandler, IEndDragHandler, IPointerClickHandler, IDropHandler
     {
         [SerializeField] private Image icon;
         [SerializeField] private TextMeshProUGUI amountText;
+        [SerializeField] private GameObject backgroundAmount;
+        [SerializeField] private TextMeshProUGUI nameText;
+        [SerializeField] private GameObject backgroundName;
+
 
         public static ItemSO CurrentlyDraggedItem { get; private set; }
 
@@ -37,6 +41,20 @@ namespace PROJ.UI
             {
                 amountText.enabled = amount > 1;
                 amountText.text = amount > 1 ? amount.ToString() : string.Empty;
+                if (backgroundAmount != null)
+                {
+                    backgroundAmount.SetActive(amount > 1);
+                }
+            }
+            
+            if (nameText != null)
+            {
+                nameText.enabled = currentItem != null;
+                nameText.text = currentItem != null ? currentItem.itemName : string.Empty;
+                if (backgroundName != null)
+                {
+                    backgroundName.SetActive(currentItem != null);
+                }
             }
         }
 
@@ -74,6 +92,19 @@ namespace PROJ.UI
             }
 
             CurrentlyDraggedItem = null;
+        }
+
+        public void OnPointerClick(PointerEventData eventData)
+        {
+            ItemSelectionEvents.Select(currentItem);
+        }
+
+        public void OnDrop(PointerEventData eventData)
+        {
+            if (EquipmentSlotUI.IsDraggingEquippedItem)
+            {
+                EquipmentSlotUI.CurrentDragSource.UnequipDraggedItem();
+            }
         }
     }
 }

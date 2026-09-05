@@ -1,4 +1,5 @@
 using UnityEngine;
+using PROJ.Item;
 
 namespace PROJ.Equipment
 {
@@ -10,7 +11,7 @@ namespace PROJ.Equipment
         Stick,
     }
     [CreateAssetMenu(fileName = "New Melee Weapon", menuName = "PROJ/Equipment/Weapon - Melee")]
-    public class WeaponMeleeSO : WeaponEquipmentSO
+    public class WeaponMeleeSO : WeaponEquipmentSO, IAttributeDisplayable
     {
         public override bool isStackable => false; // Ghi đè để luôn trả về false, vì vũ khí cận chiến không thể xếp chồng
         public override WeaponType weaponType => WeaponType.Melee; // Ghi đè để luôn trả về Melee
@@ -23,5 +24,18 @@ namespace PROJ.Equipment
 
         // Ông có thể mở rộng thêm các chỉ số đặc trưng sau này như:
         // public float knockbackForce = 5f; // Lực đẩy lùi quái
+
+        public string GetAttributeSummary()
+        {
+            string summary = "";
+            if (attackCooldown != 0) summary += $"Attack Cooldown: {attackCooldown}\n";
+            if (damage != 0) summary += $"Damage: {damage}\n";
+            if (attackRange != 0) summary += $"Attack Range: {attackRange}\n";
+            if (critChance != 0) summary += $"Crit Chance: {critChance} %\n";
+            if (critDamageMultiplier != 0) summary += $"Crit Damage: {critDamageMultiplier} %\n";
+            // if (hitboxDelay != 0) summary += $"Hitbox Delay: {hitboxDelay}\n";
+
+            return string.IsNullOrEmpty(summary) ? "" : summary.TrimEnd('\n');
+        }
     }
 }

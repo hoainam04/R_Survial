@@ -18,12 +18,16 @@ public class KeybindSettings
     public KeyCode inventory = KeyCode.I;
     public KeyCode pause = KeyCode.Escape;
 
-    // Phím tắt chọn nhanh slot / item (1 đến 5)
-    public KeyCode slot1 = KeyCode.Alpha1;
-    public KeyCode slot2 = KeyCode.Alpha2;
-    public KeyCode slot3 = KeyCode.Alpha3;
-    public KeyCode slot4 = KeyCode.Alpha4;
-    public KeyCode slot5 = KeyCode.Alpha5;
+    // Phím đổi vũ khí chính/phụ đang trang bị (không thuộc Hotbar)
+    public KeyCode weaponSlot1 = KeyCode.Alpha1;
+    public KeyCode weaponSlot2 = KeyCode.Alpha2;
+
+    // Phím tắt dùng nhanh vật phẩm Hotbar (Consumable/Throwable), mặc định phím 3-7 vì 1-2 dành cho đổi vũ khí
+    public KeyCode slot1 = KeyCode.Alpha3;
+    public KeyCode slot2 = KeyCode.Alpha4;
+    public KeyCode slot3 = KeyCode.Alpha5;
+    public KeyCode slot4 = KeyCode.Alpha6;
+    public KeyCode slot5 = KeyCode.Alpha7;
 }
 
 [Serializable]

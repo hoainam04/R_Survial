@@ -124,6 +124,8 @@ public class GameSettingsManager : MonoBehaviour
                 "Slot3" => keybinds.slot3,
                 "Slot4" => keybinds.slot4,
                 "Slot5" => keybinds.slot5,
+                "WeaponSlot1" => keybinds.weaponSlot1,
+                "WeaponSlot2" => keybinds.weaponSlot2,
                 _ => KeyCode.None
             };
         }

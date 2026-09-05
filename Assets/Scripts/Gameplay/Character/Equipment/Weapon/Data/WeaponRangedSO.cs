@@ -1,4 +1,5 @@
 using UnityEngine;
+using PROJ.Item;
 
 namespace PROJ.Equipment
 {
@@ -21,7 +22,7 @@ namespace PROJ.Equipment
     }
 
     [CreateAssetMenu(fileName = "New Ranged Weapon", menuName = "PROJ/Equipment/Weapon - Ranged")]
-    public class WeaponRangedSO : WeaponEquipmentSO
+    public class WeaponRangedSO : WeaponEquipmentSO, IAttributeDisplayable
     {
         public override bool isStackable => false;
         public override EquipmentSlot slotType => EquipmentSlot.Weapon;
@@ -79,6 +80,29 @@ namespace PROJ.Equipment
             }
 
             return Mathf.Clamp(spreadConeAngle, 8f, 22f);
+        }
+        public string GetAttributeSummary()
+        {
+            string summary = "";
+            if (damage != 0) summary += $"Damage: {damage}\n";
+            if (attackRange != 0) summary += $"Attack Range: {attackRange}\n";
+            if (critChance != 0) summary += $"Crit Chance: {critChance} %\n";
+            if (critDamageMultiplier != 0) summary += $"Crit Damage: {critDamageMultiplier} %\n";
+            if (maxAmmo != 0) summary += $"Max Ammo: {maxAmmo}\n";
+            if (reloadTime != 0) summary += $"Reload Time: {reloadTime} s\n";
+            if (fireRate != 0) summary += $"Fire Rate: 1/{fireRate} s\n";
+            // if (pelletCount != 1) summary += $"Pellet Count: {pelletCount}\n";
+            // if (spreadConeAngle != 0) summary += $"Spread Cone Angle: {spreadConeAngle}\n";
+            // if (minSpread != 0) summary += $"Min Spread: {minSpread}\n";
+            // if (maxSpread != 0) summary += $"Max Spread: {maxSpread}\n";
+            // if (spreadIncreasePerShot != 0) summary += $"Spread Increase Per Shot: {spreadIncreasePerShot}\n";
+            // if (spreadRecoverySpeed != 0) summary += $"Spread Recovery Speed: {spreadRecoverySpeed}\n";
+            // if (recoilForce != 0) summary += $"Recoil Force: {recoilForce}\n";
+            // if (horizontalRecoil != 0) summary += $"Horizontal Recoil: {horizontalRecoil}\n";
+            // if (verticalRecoil != 0) summary += $"Vertical Recoil: {verticalRecoil}\n";
+            if (bulletSpeed != 0) summary += $"Bullet Speed: {bulletSpeed}\n";
+
+            return string.IsNullOrEmpty(summary) ? "" : summary.TrimEnd('\n');
         }
     }
 }

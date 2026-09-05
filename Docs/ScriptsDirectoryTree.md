@@ -28,11 +28,16 @@ Assets/Scripts/
 │   ├── WorldSpaceUIBillboard.cs        # Xoay Canvas World Space luôn hướng về Camera
 │   ├── Common/
 │   │   └── SafeArea.cs                 # Co giãn UI theo vùng an toàn (notch) màn hình mobile
+│   ├── Equipment/
+│   │   ├── EquipmentSlotUI.cs          # Widget 1 ô trang bị: Helmet/Armor/Boots/Gloves/Backpack HOẶC Wep chính/phụ (chế độ loadout), nhận thả (drop) để Equip
+│   │   └── EquipmentPanelUI.cs         # Toàn bộ ô trang bị (bao gồm 2 ô vũ khí), lắng nghe OnEquipmentChanged/OnWeaponLoadoutChanged
 │   └── Inventory/
-│       ├── InventorySlotUI.cs          # Widget 1 ô Inventory, hỗ trợ kéo (drag) sang Hotbar
+│       ├── InventorySlotUI.cs          # Widget 1 ô Inventory, hỗ trợ kéo (drag) sang Hotbar/Equipment, click để chọn xem mô tả
 │       ├── InventoryPanelUI.cs         # Lưới slot động theo Inventory.TotalSlotCount, bật/tắt bằng phím I
-│       ├── HotbarSlotUI.cs             # Widget 1 ô Hotbar, nhận thả (drop) để gán item
-│       └── HotbarUI.cs                 # 5 ô Hotbar cố định, hiển thị icon/số lượng thật từ Inventory
+│       ├── HotbarSlotUI.cs             # Widget 1 ô Hotbar, chỉ nhận thả (drop) Consumable/Throwable
+│       ├── HotbarUI.cs                 # 5 ô Hotbar cố định (chỉ Consumable/Throwable), hiển thị icon/số lượng thật
+│       ├── ItemSelectionEvents.cs      # Kênh sự kiện UI-only báo item đang được chọn cho ItemDescriptionUI
+│       └── ItemDescriptionUI.cs        # Hiển thị icon/tên/mô tả/độ hiếm/cân nặng của item đang được chọn
 │
 └── Gameplay/                           # Logic gameplay và hệ thống nhân vật
     ├── Character/
@@ -106,7 +111,7 @@ Assets/Scripts/
     │   │   ├── InventorySlot.cs        # Cấu trúc dữ liệu của một ô chứa
     │   │   ├── ItemStack.cs            # Cấu trúc lưu trữ Item kèm số lượng
     │   │   ├── StorageBox.cs           # Kho chứa đồ tại căn cứ (Safehouse Stash)
-    │   │   ├── Hotbar.cs               # 5 ô gán riêng (ItemSO), đọc phím slot1-5, dùng Consumable
+    │   │   ├── Hotbar.cs               # 5 ô dùng nhanh Consumable/Throwable, đọc phím slot1-5 (mặc định phím 3-7)
     │   │   ├── PlayerItemPicker.cs     # Tương tác nhặt item dưới đất
     │   │   └── WorldItem.cs            # Đại diện item nằm trong thế giới 3D
     │   │

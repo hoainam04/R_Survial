@@ -5,8 +5,6 @@ using PROJ.Equipment;
 
 public abstract class WeaponRanged : MonoBehaviour
 {
-    #region Inspector
-
     [Header("Cấu Hình Băng Đạn & Khai Hỏa")]
     public WeaponRangedSO weaponData;
     [SerializeField] protected Transform muzzlePoint;
@@ -15,89 +13,48 @@ public abstract class WeaponRanged : MonoBehaviour
     [SerializeField] private Transform gunModel;
     [SerializeField] private float restoreSpeed = 15f;
 
-    [Header("Model Rotation")]
-    // [SerializeField] private float modelRotationOffsetZ = 0f;
-
     [Header("Visual Recoil")]
     [SerializeField] private Vector3 recoilPositionOffset = new Vector3(0f, -0.15f, 0f);
     [SerializeField] private Vector3 recoilRotationOffset = new Vector3(1f, 0f, 0f);
-
-    #endregion
-
-    #region Runtime Data
-
     protected int currentAmmo;
     public bool IsReloading { get; protected set; }
-
     private Vector3 originalLocalPosition;
     private Quaternion originalLocalRotation;
     private Coroutine recoilCoroutine;
-
     private float currentSpread;
     private int recoilStep;
-    private int horizontalDirection = 1;
-    private int verticalDirection = 1;
-    #endregion
-
-    #region Unity Events
+    private float horizontalRecoilOffset;
+    private float verticalRecoilOffset;
 
     protected virtual void Start()
     {
-        if (weaponData != null)
-        {
-            currentAmmo = weaponData.maxAmmo;
-            currentSpread = weaponData.minSpread;
-        }
-
-        if (gunModel != null)
-        {
-            originalLocalPosition = gunModel.localPosition;
-            originalLocalRotation = gunModel.localRotation;
-        }
+        InitializeWeaponState();
+        CacheGunModelPose();
     }
 
     protected virtual void Update()
     {
         RecoverSpread();
     }
-
-    #endregion
-
-    #region Public API
-
-    public bool CanFire()
-    {
-        return weaponData != null && currentAmmo > 0 && !IsReloading;
-    }
-
+    public bool CanFire() => weaponData != null && currentAmmo > 0 && !IsReloading;
     public abstract void Fire(LayerMask enemyLayers, Vector3 direction);
-
     public void Reload()
     {
-        if (weaponData == null) return;
-        if (IsReloading || currentAmmo == weaponData.maxAmmo) return;
+        if (weaponData == null || IsReloading || currentAmmo == weaponData.maxAmmo) return;
 
         StartCoroutine(ReloadCoroutine());
     }
-
     public void SetReloadingStatus(bool status)
     {
         IsReloading = status;
     }
-
     public void RefillAmmo()
     {
         if (weaponData == null) return;
         currentAmmo = weaponData.maxAmmo;
     }
-
     public int CurrentAmmo => currentAmmo;
     public int MaxAmmo => weaponData != null ? weaponData.maxAmmo : 0;
-
-    #endregion
-
-    #region Reload
-
     private IEnumerator ReloadCoroutine()
     {
         IsReloading = true;
@@ -110,25 +67,18 @@ public abstract class WeaponRanged : MonoBehaviour
 
         Debug.Log("[Súng]: Đã nạp đầy băng đạn!");
     }
-
-    #endregion
-
-    #region Progressive Recoil
-
     protected void AddShotRecoil()
     {
         if (weaponData == null) return;
 
-        if (recoilStep == 0)
-        {
-            horizontalDirection = UnityEngine.Random.value < 0.5f ? -1 : 1;
-            verticalDirection = UnityEngine.Random.value < 0.5f ? -1 : 1;
-        }
-
         recoilStep++;
-
-        currentSpread += weaponData.spreadIncreasePerShot;
-        currentSpread = Mathf.Clamp(currentSpread, weaponData.minSpread, weaponData.maxSpread);
+        horizontalRecoilOffset = Random.Range(-1f, 1f);
+        verticalRecoilOffset = Random.Range(-1f, 1f);
+        currentSpread = Mathf.Clamp(
+            currentSpread + weaponData.spreadIncreasePerShot,
+            weaponData.minSpread,
+            weaponData.maxSpread
+        );
     }
     private void RecoverSpread()
     {
@@ -154,22 +104,16 @@ public abstract class WeaponRanged : MonoBehaviour
         if (direction.sqrMagnitude <= 0.001f)
             return transform.forward;
 
+        float verticalOffset = verticalRecoilOffset * weaponData.verticalRecoil * currentSpread;
+        float horizontalOffset = horizontalRecoilOffset * weaponData.horizontalRecoil * currentSpread;
         Vector3 sideAxis = new Vector3(-direction.z, 0f, direction.x).normalized;
 
-        float verticalWave = Mathf.Sin(recoilStep * 0.45f);
-        float horizontalWave = Mathf.Sin(recoilStep * 0.75f);
-
-        float verticalOffset = verticalWave * weaponData.verticalRecoil * currentSpread * verticalDirection;
-        float horizontalOffset = horizontalWave * weaponData.horizontalRecoil * currentSpread * horizontalDirection;
-
-        Vector3 finalDirection =
+        return (
             direction +
             sideAxis * horizontalOffset +
-            Vector3.up * verticalOffset;
-
-        return finalDirection.normalized;
+            Vector3.up * verticalOffset
+        ).normalized;
     }
-
     protected bool PrepareShot(Vector3 inputDirection, out Vector3 flatDirection)
     {
         if (!CanFire())
@@ -186,11 +130,7 @@ public abstract class WeaponRanged : MonoBehaviour
         AddShotRecoil();
         return true;
     }
-
-    protected float ResolveDamage(float fallback)
-    {
-        return weaponData != null ? weaponData.damage : fallback;
-    }
+    protected float ResolveDamage(float fallback) => weaponData != null ? weaponData.damage : fallback;
 
     protected float ResolveCriticalDamage(float baseDamage, out bool isCritical)
     {
@@ -215,12 +155,7 @@ public abstract class WeaponRanged : MonoBehaviour
         finalDamage = baseDamage * Mathf.Max(1f, critMultiplier);
         return finalDamage;
     }
-
-    protected float ResolveMaxRange(float fallback)
-    {
-        return weaponData != null ? weaponData.attackRange : fallback;
-    }
-
+    protected float ResolveMaxRange(float fallback) => weaponData != null ? weaponData.attackRange : fallback;
     protected float ResolveProjectileSpeed(float fallback)
     {
         if (weaponData == null)
@@ -230,7 +165,6 @@ public abstract class WeaponRanged : MonoBehaviour
 
         return weaponData.bulletSpeed > 0f ? weaponData.bulletSpeed : fallback;
     }
-
     protected GameObject ResolveProjectilePrefab(GameObject fallback)
     {
         if (weaponData != null && weaponData.projectilePrefab != null)
@@ -240,7 +174,6 @@ public abstract class WeaponRanged : MonoBehaviour
 
         return fallback;
     }
-
     protected GameObject ResolveTracerPrefab(GameObject fallback)
     {
         if (weaponData != null && weaponData.tracerPrefab != null)
@@ -250,7 +183,6 @@ public abstract class WeaponRanged : MonoBehaviour
 
         return fallback;
     }
-
     protected float ResolveTracerDuration(float fallback)
     {
         if (weaponData != null && weaponData.tracerDuration > 0f)
@@ -260,12 +192,7 @@ public abstract class WeaponRanged : MonoBehaviour
 
         return fallback;
     }
-
-    protected int ResolvePelletCount()
-    {
-        return weaponData != null ? weaponData.ResolvePelletCount() : 1;
-    }
-
+    protected int ResolvePelletCount() => weaponData != null ? weaponData.ResolvePelletCount() : 1;
     protected Vector3 GetPelletDirection(Vector3 direction, int pelletIndex, int pelletCount)
     {
         Vector3 baseDirection = ApplyBulletRecoil(direction);
@@ -277,24 +204,43 @@ public abstract class WeaponRanged : MonoBehaviour
 
         float spreadAngle = weaponData.ResolveSpreadConeAngle();
         float spreadRadians = spreadAngle * Mathf.Deg2Rad;
-        float normalizedIndex = pelletIndex / Mathf.Max(1f, pelletCount - 1f);
-        float angle = normalizedIndex * Mathf.PI * 2f;
-
-        Vector3 right = Vector3.Cross(baseDirection, Vector3.up).normalized;
-        if (right.sqrMagnitude <= 0.001f)
-        {
-            right = Vector3.right;
-        }
-
-        Vector3 up = Vector3.Cross(right, baseDirection).normalized;
-        Vector3 spreadOffset = right * Mathf.Cos(angle) * spreadRadians + up * Mathf.Sin(angle) * spreadRadians;
-
-        return (baseDirection + spreadOffset).normalized;
+        GetSpreadBasis(baseDirection, out Vector3 right, out Vector3 up);
+        return GetRandomConeDirection(baseDirection, right, up, spreadRadians);
     }
 
-    #endregion
+    private void InitializeWeaponState()
+    {
+        if (weaponData == null) return;
 
-    #region Direction Utility
+        currentAmmo = weaponData.maxAmmo;
+        currentSpread = weaponData.minSpread;
+    }
+
+    private void CacheGunModelPose()
+    {
+        if (gunModel == null) return;
+
+        originalLocalPosition = gunModel.localPosition;
+        originalLocalRotation = gunModel.localRotation;
+    }
+
+    private void GetSpreadBasis(Vector3 direction, out Vector3 right, out Vector3 up)
+    {
+        right = Vector3.Cross(direction, Vector3.up).normalized;
+        if (right.sqrMagnitude <= 0.001f) right = Vector3.right;
+
+        up = Vector3.Cross(right, direction).normalized;
+    }
+
+    private Vector3 GetRandomConeDirection(Vector3 direction, Vector3 right, Vector3 up, float spreadRadians)
+    {
+        float azimuth = Random.Range(0f, Mathf.PI * 2f);
+        float cosAngle = Random.Range(Mathf.Cos(spreadRadians), 1f);
+        float sinAngle = Mathf.Sqrt(1f - cosAngle * cosAngle);
+        Vector3 spreadDirection = right * Mathf.Cos(azimuth) + up * Mathf.Sin(azimuth);
+
+        return (direction * cosAngle + spreadDirection * sinAngle).normalized;
+    }
 
     protected Vector3 GetFlatDirection(Vector3 direction)
     {
@@ -306,22 +252,7 @@ public abstract class WeaponRanged : MonoBehaviour
         return direction.normalized;
     }
 
-    #endregion
-
-    #region Model Rotation
-
-    protected void RotateGunModel(Vector3 direction)
-    {
-        if (gunModel == null) return;
-
-        // Không ghi đè rotation gốc bằng state hiện tại của model.
-        // originalLocalRotation phải giữ giá trị mặc định ban đầu của gunModel
-        // để recoil luôn reset về đúng pose chuẩn, không cộng dồn qua từng shot.
-    }
-
-    #endregion
-
-    #region Visual Recoil
+    protected void RotateGunModel(Vector3 direction) { }
 
     public void SetPlayerAnimation()
     {
@@ -343,34 +274,13 @@ public abstract class WeaponRanged : MonoBehaviour
 
     private IEnumerator RecoilRoutine()
     {
-        Vector3 targetRecoilPos = originalLocalPosition + recoilPositionOffset;
-        Quaternion targetRecoilRot = originalLocalRotation * Quaternion.Euler(recoilRotationOffset);
-
-        gunModel.localPosition = targetRecoilPos;
-        gunModel.localRotation = targetRecoilRot;
-
-        while (Vector3.Distance(gunModel.localPosition, originalLocalPosition) > 0.001f ||
-               Quaternion.Angle(gunModel.localRotation, originalLocalRotation) > 0.1f)
-        {
-            gunModel.localPosition = Vector3.Lerp(
-                gunModel.localPosition,
-                originalLocalPosition,
-                Time.deltaTime * restoreSpeed
-            );
-
-            gunModel.localRotation = Quaternion.Slerp(
-                gunModel.localRotation,
-                originalLocalRotation,
-                Time.deltaTime * restoreSpeed
-            );
-
-            yield return null;
-        }
-
-        gunModel.localPosition = originalLocalPosition;
-        gunModel.localRotation = originalLocalRotation;
+        yield return WeaponRecoilRoutine.Play(
+            gunModel,
+            originalLocalPosition,
+            originalLocalRotation,
+            recoilPositionOffset,
+            recoilRotationOffset,
+            restoreSpeed);
         recoilCoroutine = null;
     }
-
-    #endregion
 }

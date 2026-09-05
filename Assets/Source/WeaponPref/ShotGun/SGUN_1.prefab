@@ -139,10 +139,10 @@ MonoBehaviour:
   weaponData: {fileID: 11400000, guid: 2947d4879c33ef0458ac834fd68da11b, type: 2}
   muzzlePoint: {fileID: 1975002341126040437}
   gunModel: {fileID: 8935162181996454143}
-  restoreSpeed: 5
-  recoilPositionOffset: {x: 0, y: -0.15, z: 0}
-  recoilRotationOffset: {x: 1, y: 0, z: 0}
-  fallbackTracerPrefab: {fileID: 7148996207818113210, guid: caf729332a00d9543acf58d3659d0c2a, type: 3}
+  restoreSpeed: 20
+  recoilPositionOffset: {x: 0, y: -0.5, z: 0}
+  recoilRotationOffset: {x: 5, y: 0, z: 0}
+  fallbackTracerObjectPrefab: {fileID: 0}
   fallbackTracerDuration: 0.05
 --- !u!1 &6881665940820891342
 GameObject:

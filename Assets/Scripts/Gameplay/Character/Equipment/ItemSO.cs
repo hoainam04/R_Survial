@@ -47,4 +47,9 @@ namespace PROJ.Item
         [Header("Weight (trọng lượng) của vật phẩm")]
         public float weight;
     }
+    public interface IAttributeDisplayable
+    {
+        // Có thể trả về chuỗi đã format hoặc trả về danh sách Key-Value để tránh split string
+        string GetAttributeSummary();
+    }
 }

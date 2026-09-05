@@ -10,6 +10,11 @@ namespace PROJ.Item
         [SerializeField] private int baseSlotCount = 12;
         [SerializeField] private List<InventorySlot> slots = new();
 
+        [Header("Drop Settings")]
+        [SerializeField] private WorldItem worldItemPrefab;
+        [SerializeField] private float dropDistance = 1f;
+        [SerializeField] private float dropUpwardForce = 1f;
+
         private int bonusSlotCount;
 
         public IReadOnlyList<InventorySlot> Slots => slots;
@@ -138,9 +143,69 @@ namespace PROJ.Item
             return false;
         }
 
+        public bool DropItem(ItemSO item, int amount = 1)
+        {
+            if (item == null || amount <= 0 || !HasItem(item, amount)) return false;
+            if (worldItemPrefab == null)
+            {
+                Debug.LogError("[Inventory]: Chưa gán World Item Prefab, không thể drop item.");
+                return false;
+            }
+
+            Vector3 dropPosition = transform.position + transform.forward * dropDistance + Vector3.up;
+            WorldItem droppedItem = Instantiate(worldItemPrefab, dropPosition, Quaternion.identity);
+            droppedItem.Initialize(item, amount);
+
+            if (droppedItem.TryGetComponent<Rigidbody>(out var rigidbody))
+            {
+                Vector3 dropDirection = (transform.forward + Vector3.up * dropUpwardForce).normalized;
+                rigidbody.AddForce(dropDirection * dropUpwardForce, ForceMode.Impulse);
+            }
+
+            return RemoveItem(item, amount);
+        }
+        public bool DropAllItem(ItemSO item)
+        {
+            if (item == null) return false;
+
+            int totalAmount = GetItemCount(item);
+            if (totalAmount <= 0) return false;
+
+            return DropItem(item, totalAmount);
+        }
         public bool HasItem(ItemSO item, int amount = 1)
         {
             return GetItemCount(item) >= amount;
+        }
+
+        public bool CanAddItem(ItemSO item, int amount = 1)
+        {
+            if (item == null || amount <= 0) return false;
+
+            int remaining = amount;
+
+            if (item.isStackable)
+            {
+                foreach (var slot in slots)
+                {
+                    if (slot.CanStackWith(item))
+                    {
+                        remaining -= Mathf.Max(0, item.maxStackSize - slot.Amount);
+                        if (remaining <= 0) return true;
+                    }
+                }
+            }
+
+            foreach (var slot in slots)
+            {
+                if (slot.IsEmpty)
+                {
+                    remaining -= item.isStackable ? Mathf.Max(1, item.maxStackSize) : 1;
+                    if (remaining <= 0) return true;
+                }
+            }
+
+            return false;
         }
 
         public int GetItemCount(ItemSO item)
@@ -179,6 +244,21 @@ namespace PROJ.Item
             slots[indexB].Set(itemA, amountA);
 
             OnInventoryChanged?.Invoke();
+        }
+        public int EmptySlotCount
+        {
+            get
+            {
+                int count = 0;
+
+                foreach (var slot in slots)
+                {
+                    if (slot.IsEmpty)
+                        count++;
+                }
+
+                return count;
+            }
         }
     }
 }

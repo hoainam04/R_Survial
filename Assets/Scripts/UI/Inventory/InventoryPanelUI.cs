@@ -1,6 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 using PROJ.Item;
+using UnityEngine.UI;
+using TMPro;
 
 namespace PROJ.UI
 {
@@ -10,6 +12,15 @@ namespace PROJ.UI
         [SerializeField] private InventorySlotUI slotPrefab;
         [SerializeField] private Transform gridParent;
         [SerializeField] private GameObject panelRoot;
+        [Header("Optional UI Elements")]
+        [SerializeField] private TextMeshProUGUI equipmentText;
+        [SerializeField] private TextMeshProUGUI backpackText;
+        [SerializeField] private TextMeshProUGUI weightText;
+        [SerializeField] private TextMeshProUGUI moneyText;
+        [SerializeField] private Button sortBtn;
+        [SerializeField] private Button storeAllBtn;
+        
+        // [SerializeField] private Button closeBtn;
 
         private readonly List<InventorySlotUI> spawnedSlots = new();
 
@@ -45,6 +56,11 @@ namespace PROJ.UI
                 if (panelRoot != null)
                 {
                     panelRoot.SetActive(!panelRoot.activeSelf);
+
+                    if (!panelRoot.activeSelf)
+                    {
+                        ItemSelectionEvents.ClearSelection();
+                    }
                 }
             }
         }
@@ -72,6 +88,45 @@ namespace PROJ.UI
             {
                 spawnedSlots[i].SetData(inventory.GetSlot(i));
             }
+            SetUpTextUI();
+        }
+        private void ArrangeInventory()
+        {
+            // if (inventory != null)
+            // {
+            //     inventory.Arrange();
+            // }
+        }
+        private void StoreInventory()
+        {
+            // if (inventory != null)
+            // {
+            //     inventory.Store();
+            // }
+        }
+        private void UpdateWeightAndMoney()
+        {
+            // if (weightText != null)
+            // {
+            //     weightText.text = $"Weight: {inventory?.CurrentWeight ?? 0}/{inventory?.MaxWeight ?? 0}";
+            // }
+
+            // if (moneyText != null)
+            // {
+            //     moneyText.text = $"Money: {inventory?.CurrentMoney ?? 0}";
+            // }
+        }
+        private void SetUpTextUI()
+        {
+            equipmentText.text = $"Equipment";
+            // weightText.text = $"Weight: {inventory?.CurrentWeight ?? 0}/{inventory?.MaxWeight ?? 0}";
+            // moneyText.text = $"Money: {inventory?.CurrentMoney ?? 0}";
+            backpackText.text = $"Backpack ({inventory?.EmptySlotCount ?? 0}/{inventory?.TotalSlotCount ?? 0})";
+            sortBtn.GetComponentInChildren<TextMeshProUGUI>().text = $"Sort";
+            storeAllBtn.GetComponentInChildren<TextMeshProUGUI>().text = $"Store All";
+            weightText.text = $"Weight:??";
+            moneyText.text = $"Money:??";
+
         }
     }
 }

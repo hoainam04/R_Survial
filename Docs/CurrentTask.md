@@ -10,9 +10,12 @@ Tài liệu này ghi nhận các điểm cần lưu ý và kế hoạch refactor
 - **Equipment System**: `CharacterEquipmentManager` đã xử lý equip/unequip, cộng trừ attribute, cộng slot kho đồ khi mặc balo, spawn/destroy model 3D.
 - **UI Kho Đồ & Hotbar**: Đã code xong phần data/UI script:
   - `ConsumableSO.UseConsumable(CharacterAttributeManager)` áp dụng hồi Máu/Thể lực/Đói/Khát thật qua `CharacterAttribute.Modify`.
-  - `Hotbar.cs` (5 ô gán riêng theo `ItemSO`, đọc phím `slot1`-`slot5` qua `GameSettingsManager`, phát `OnHotbarChanged`).
-  - `InventorySlotUI.cs`/`InventoryPanelUI.cs` (lưới slot động theo `Inventory.TotalSlotCount`, hỗ trợ kéo item, bật/tắt bằng phím `I`).
-  - `HotbarSlotUI.cs`/`HotbarUI.cs` (5 ô cố định, nhận thả kéo để gán, hiển thị số lượng thật từ `Inventory.GetItemCount`).
+  - `Hotbar.cs`: 5 ô dùng nhanh Consumable/Throwable (KHÔNG phải ô trang bị), đọc phím `slot1`-`slot5` qua `GameSettingsManager` (mặc định phím 3-7, vì phím 1-2 dành cho đổi vũ khí), phát `OnHotbarChanged`.
+  - `InventorySlotUI.cs`/`InventoryPanelUI.cs` (lưới slot động theo `Inventory.TotalSlotCount`, hỗ trợ kéo item, click để chọn xem mô tả, bật/tắt bằng phím `I`).
+  - `HotbarSlotUI.cs`/`HotbarUI.cs` (5 ô cố định, chỉ nhận thả Consumable/Throwable, hiển thị số lượng thật từ `Inventory.GetItemCount`).
+  - `CharacterEquipmentManager.cs`: thêm loadout 2 vũ khí Wep chính/phụ (`GetWeaponInLoadoutSlot`/`AssignWeaponToLoadout`/`SwitchWeapon`/`ActiveWeaponSlotIndex`), đọc phím `WeaponSlot1`/`WeaponSlot2` để đổi vũ khí active, event `OnEquipmentChanged`/`OnWeaponLoadoutChanged` cho UI lắng nghe (không gọi UI trực tiếp).
+  - `EquipmentSlotUI.cs`/`EquipmentPanelUI.cs` (bảng trang bị đầy đủ: Wep chính, Wep phụ, Helmet, Armor, Boots, Gloves, Backpack — nhận thả kéo từ Inventory để Equip).
+  - `ItemSelectionEvents.cs`/`ItemDescriptionUI.cs` (kênh sự kiện UI-only + bảng mô tả item khi click chọn từ Inventory/Hotbar/Equipment).
   - Xem hướng dẫn dựng Canvas/Prefab thủ công trong Unity Editor tại [`Docs/InventoryHotbarUIGuide.md`](InventoryHotbarUIGuide.md).
 
 ## 🔍 Ghi Chú Rà Soát Scripts Dựa Trên Rules Mới
